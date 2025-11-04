@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube MP4 Converter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            color: #fdbb2d;
+            font-size: 1.1rem;
+        }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(253, 187, 45, 0.5);
+        }
+        
+        button {
+            background: #fdbb2d;
+            color: #1a2a6c;
+            border: none;
+            border-radius: 50px;
+            padding: 0 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:hover {
+            background: #ffca4c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .info-box {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            color: white;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .info-box h3 {
+            margin-bottom: 10px;
+            color: #fdbb2d;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-box ul {
+            padding-left: 20px;
+        }
+        
+        .info-box li {
+            margin-bottom: 8px;
+        }
+        
+        .preview-section {
+            display: none;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .preview-section h2 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .video-preview {
+            width: 100%;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        
+        .video-preview i {
+            font-size: 5rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .video-title {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        
+        .download-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+        }
+        
+        .download-btn:hover {
+            background: #5cb860;
+        }
+        
+        .status-section {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 20px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #fdbb2d, #ff8c00);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+        
+        .status-text {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .status-details {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+        
+        .formats {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .format-option {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .format-option:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .format-option.active {
+            background: #fdbb2d;
+            color: #1a2a6c;
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .error-message {
+            color: #ff6b6b;
+            background: rgba(255, 0, 0, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .success-message {
+            color: #4CAF50;
+            background: rgba(0, 255, 0, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        @media (max-width: 600px) {
+            .input-group {
+                flex-direction: column;
+            }
+            
+            button {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-download"></i> YouTube MP4 Converter</h1>
+            <p class="subtitle">Convert and download YouTube videos to MP4 format in seconds</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="input-section">
+                <div class="input-group">
+                    <input type="text" id="youtube-url" placeholder="Paste YouTube video URL here...">
+                    <button id="convert-btn"><i class="fas fa-cog"></i> Convert</button>
+                </div>
+                
+                <div class="error-message" id="error-message">
+                    <i class="fas fa-exclamation-triangle"></i> <span id="error-text"></span>
+                </div>
+                
+                <div class="success-message" id="success-message">
+                    <i class="fas fa-check-circle"></i> <span id="success-text"></span>
+                </div>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-info-circle"></i> How to use:</h3>
+                    <ul>
+                        <li>Copy the URL of the YouTube video you want to convert</li>
+                        <li>Paste the URL in the input field above</li>
+                        <li>Click "Convert" and wait for processing</li>
+                        <li>Download the converted MP4 file</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="preview-section" id="preview-section">
+                <h2>Video Preview</h2>
+                <div class="video-preview">
+                    <i class="fas fa-video"></i>
+                </div>
+                <div class="video-title" id="video-title">Video Title</div>
+                <button class="download-btn" id="download-btn"><i class="fas fa-download"></i> Download MP4</button>
+            </div>
+            
+            <div class="status-section" id="status-section">
+                <div class="status-text">Converting your video...</div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div class="status-details">This may take a few moments depending on video length</div>
+                
+                <div class="formats">
+                    <div class="format-option active">MP4 720p</div>
+                    <div class="format-option">MP4 480p</div>
+                    <div class="format-option">MP4 360p</div>
+                    <div class="format-option">MP3 Audio</div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Note: This tool uses a backend service to process videos.</p>
+            <p>© 2023 YouTube MP4 Converter | For Educational Purposes</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const convertBtn = document.getElementById('convert-btn');
+            const youtubeUrlInput = document.getElementById('youtube-url');
+            const previewSection = document.getElementById('preview-section');
+            const statusSection = document.getElementById('status-section');
+            const progressBar = document.getElementById('progress-bar');
+            const videoTitle = document.getElementById('video-title');
+            const downloadBtn = document.getElementById('download-btn');
+            const errorMessage = document.getElementById('error-message');
+            const successMessage = document.getElementById('success-message');
+            const errorText = document.getElementById('error-text');
+            const successText = document.getElementById('success-text');
+            
+            // Sample video titles for demo
+            const sampleTitles = [
+                "Amazing Nature Documentary - Wildlife in HD",
+                "Top 10 Travel Destinations for 2023",
+                "How to Build a Website in 30 Minutes",
+                "Cooking Masterclass: Italian Pasta Recipe",
+                "Learn JavaScript in One Hour - Beginner Tutorial"
+            ];
+            
+            convertBtn.addEventListener('click', function() {
+                const url = youtubeUrlInput.value.trim();
+                
+                if (!url) {
+                    showError('Please enter a YouTube URL');
+                    return;
+                }
+                
+                // Validate YouTube URL
+                const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+                if (!youtubeRegex.test(url)) {
+                    showError('Please enter a valid YouTube URL');
+                    return;
+                }
+                
+                // Hide messages
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'none';
+                
+                // Show status section
+                statusSection.style.display = 'block';
+                previewSection.style.display = 'none';
+                
+                // Simulate conversion progress
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 10;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                        
+                        // Show preview after conversion
+                        setTimeout(() => {
+                            statusSection.style.display = 'none';
+                            previewSection.style.display = 'block';
+                            
+                            // Set a random title
+                            const randomTitle = sampleTitles[Math.floor(Math.random() * sampleTitles.length)];
+                            videoTitle.textContent = randomTitle;
+                            
+                            // Show success message
+                            successText.textContent = 'Video converted successfully! You can now download it.';
+                            successMessage.style.display = 'block';
+                        }, 500);
+                    }
+                    progressBar.style.width = progress + '%';
+                }, 300);
+            });
+            
+            // Format selection
+            const formatOptions = document.querySelectorAll('.format-option');
+            formatOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    formatOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Download button functionality
+            downloadBtn.addEventListener('click', function() {
+                alert('In a real application, this would trigger the download. This is a frontend demo only.');
+            });
+            
+            function showError(message) {
+                errorText.textContent = message;
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
